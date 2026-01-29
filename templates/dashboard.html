@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <div class="logo"></div>
+    <h1>SkillGap Analyzer</h1>
+  </div>
+  <div>
+    <span class="muted">Signed in as <strong>{{ session.get('user') }}</strong></span>
+    <a href="/logout" class="logout-btn" style="margin-left:16px">Logout</a>
+  </div>
+</header>
+
+<div class="container">
+  <div class="grid">
+    <main>
+      <div class="panel card">
+        <h2>Hello, {{ name }} 👋</h2>
+        <p class="muted">Target Role: <strong>{{ role }}</strong></p>
+      </div>
+
+      <div class="panel card">
+        <h3>Your Skills</h3>
+        {% for skill in user_skills %}
+            <span class="skill"><i class="fa-solid fa-check" style="opacity:0.9"></i> {{ skill }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="panel card">
+        <h3>Missing Skills</h3>
+        {% if missing_skills %}
+            {% for skill in missing_skills %}
+                <span class="skill missing"><i class="fa-solid fa-circle-exclamation"></i> {{ skill }}</span>
+            {% endfor %}
+        {% else %}
+            <p>🎉 You already meet the required skills!</p>
+        {% endif %}
+      </div>
+
+      <div class="panel card">
+        <h3>Learning Roadmap</h3>
+        <ol>
+            {% for step in roadmap %}
+            <li>{{ step }}</li>
+            {% endfor %}
+        </ol>
+      </div>
+    </main>
+
+    <aside>
+      <div class="panel card">
+        <h3>Skill Gap Visualization</h3>
+        <canvas id="skillChart"></canvas>
+      </div>
+
+      <div class="panel card">
+        <h3>Actions</h3>
+        <p class="muted">Quick links to help you start:</p>
+        <p><a class="btn" href="/">Analyze another profile</a></p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('skillChart');
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Matched Skills', 'Missing Skills'],
+            datasets: [{
+                data: [{{ matched_count }}, {{ missing_count }}],
+                backgroundColor: ['#2563eb', '#ef4444'],
+                borderColor: ['#1d4ed8', '#b91c1c'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: true, text: 'Total Required: {{ required_count }} skills' }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

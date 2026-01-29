@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>Skill Gap Analyzer</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <style>
+                .hero{display:flex;align-items:center;justify-content:space-between;gap:18px}
+                .hero-content{flex:1}
+                .hero-cta{min-width:180px}
+        </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="brand">
+        <div class="logo"></div>
+        <h1>SkillGap Analyzer</h1>
+    </div>
+    <div>
+        {% if session.get('user') %}
+            <a href="/logout" class="logout-btn">Logout</a>
+        {% else %}
+            <a href="/login" class="logout-btn">Login</a>
+        {% endif %}
+    </div>
+</header>
+
+<div class="container">
+        <div class="hero panel">
+            <div class="hero-content">
+                <h2>AI Skill Gap Analyzer</h2>
+                <p class="muted">Analyze your skills and get a personalized, role-based learning roadmap.</p>
+            </div>
+            <div class="hero-cta">
+                <a href="#form" class="btn">Get Started <i class="fa-solid fa-arrow-right" style="margin-left:8px"></i></a>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <div id="form" class="panel">
+                    <form method="POST">
+                        <div class="field">
+                            <label>Name</label>
+                            <input type="text" name="name" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Select Target Role</label>
+                            <select name="role" required>
+                                    <option value="">-- Select a role --</option>
+                                    <option value="Data Scientist">Data Scientist</option>
+                                    <option value="Full Stack Developer">Full Stack Developer</option>
+                                    <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Your Skills (comma separated)</label>
+                            <textarea name="skills" placeholder="Python, SQL, HTML" required></textarea>
+                        </div>
+
+                        <div class="field">
+                            <button class="btn" type="submit">Analyze Skills</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <aside>
+                <div class="panel card">
+                    <h3>Why use SkillGap?</h3>
+                    <p class="muted">Get a clear view of what you know and what to learn next, with actionable mini-project suggestions.</p>
+                </div>
+                <div class="panel card">
+                    <h3>Quick Tips</h3>
+                    <ul class="muted">
+                        <li>Use commas to separate skills</li>
+                        <li>Pick one role to focus the roadmap</li>
+                        <li>Try building the suggested mini-projects</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+  
+</div>
+
+</body>
+</html>
