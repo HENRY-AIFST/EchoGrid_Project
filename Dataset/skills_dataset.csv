@@ -1,0 +1,310 @@
+job_role,skill
+Data Scientist,Python
+Data Scientist,R
+Data Scientist,SQL
+Data Scientist,Pandas
+Data Scientist,NumPy
+Data Scientist,Scikit-learn
+Data Scientist,TensorFlow
+Data Scientist,PyTorch
+Data Scientist,Machine Learning
+Data Scientist,Deep Learning
+Data Scientist,Statistics
+Data Scientist,Probability
+Data Scientist,Data Visualization
+Data Scientist,Matplotlib
+Data Scientist,Seaborn
+Data Scientist,Feature Engineering
+Data Scientist,Model Evaluation
+Data Scientist,Data Cleaning
+Data Scientist,Big Data
+Data Scientist,Hadoop
+Data Scientist,Spark
+Data Scientist,Tableau
+Data Scientist,Power BI
+Data Scientist,NLP
+Data Scientist,Time Series Analysis
+Data Scientist,A/B Testing
+Data Scientist,Git
+Data Scientist,Data Wrangling
+Data Scientist,Linear Regression
+Data Scientist,Logistic Regression
+
+Machine Learning Engineer,Python
+Machine Learning Engineer,TensorFlow
+Machine Learning Engineer,PyTorch
+Machine Learning Engineer,Machine Learning
+Machine Learning Engineer,Deep Learning
+Machine Learning Engineer,Model Deployment
+Machine Learning Engineer,Docker
+Machine Learning Engineer,Kubernetes
+Machine Learning Engineer,AWS
+Machine Learning Engineer,GCP
+Machine Learning Engineer,Azure
+Machine Learning Engineer,CI/CD
+Machine Learning Engineer,Data Pipelines
+Machine Learning Engineer,Feature Engineering
+Machine Learning Engineer,Model Optimization
+Machine Learning Engineer,Neural Networks
+Machine Learning Engineer,CNN
+Machine Learning Engineer,RNN
+Machine Learning Engineer,Transformers
+Machine Learning Engineer,MLflow
+Machine Learning Engineer,Scikit-learn
+Machine Learning Engineer,Data Preprocessing
+Machine Learning Engineer,Monitoring
+Machine Learning Engineer,Flask
+Machine Learning Engineer,FastAPI
+Machine Learning Engineer,Git
+Machine Learning Engineer,Linux
+Machine Learning Engineer,Spark
+Machine Learning Engineer,REST API
+Machine Learning Engineer,Model Serving
+
+Data Analyst,SQL
+Data Analyst,Excel
+Data Analyst,Python
+Data Analyst,R
+Data Analyst,Power BI
+Data Analyst,Tableau
+Data Analyst,Data Cleaning
+Data Analyst,Data Visualization
+Data Analyst,Pandas
+Data Analyst,NumPy
+Data Analyst,Statistics
+Data Analyst,Dashboarding
+Data Analyst,Data Wrangling
+Data Analyst,Google Sheets
+Data Analyst,Reporting
+Data Analyst,Data Interpretation
+Data Analyst,ETL
+Data Analyst,Query Optimization
+Data Analyst,Data Validation
+Data Analyst,Data Mining
+Data Analyst,Business Intelligence
+Data Analyst,Forecasting
+Data Analyst,Regression Analysis
+Data Analyst,A/B Testing
+Data Analyst,Data Storytelling
+Data Analyst,Git
+Data Analyst,Data Modeling
+Data Analyst,PowerPoint
+Data Analyst,Data Governance
+Data Analyst,Data Quality
+
+AI Engineer,Python
+AI Engineer,Machine Learning
+AI Engineer,Deep Learning
+AI Engineer,TensorFlow
+AI Engineer,PyTorch
+AI Engineer,NLP
+AI Engineer,Computer Vision
+AI Engineer,Reinforcement Learning
+AI Engineer,Transformers
+AI Engineer,LLMs
+AI Engineer,Hugging Face
+AI Engineer,LangChain
+AI Engineer,Prompt Engineering
+AI Engineer,Data Engineering
+AI Engineer,Model Deployment
+AI Engineer,Docker
+AI Engineer,Kubernetes
+AI Engineer,Flask
+AI Engineer,FastAPI
+AI Engineer,AWS
+AI Engineer,GCP
+AI Engineer,Azure
+AI Engineer,Git
+AI Engineer,Linux
+AI Engineer,Data Pipelines
+AI Engineer,Vector Databases
+AI Engineer,Model Evaluation
+AI Engineer,Model Optimization
+AI Engineer,Data Preprocessing
+AI Engineer,Scikit-learn
+
+Full Stack Developer,HTML
+Full Stack Developer,CSS
+Full Stack Developer,JavaScript
+Full Stack Developer,React
+Full Stack Developer,Angular
+Full Stack Developer,Vue
+Full Stack Developer,Node.js
+Full Stack Developer,Express.js
+Full Stack Developer,MongoDB
+Full Stack Developer,MySQL
+Full Stack Developer,PostgreSQL
+Full Stack Developer,REST API
+Full Stack Developer,GraphQL
+Full Stack Developer,Git
+Full Stack Developer,GitHub
+Full Stack Developer,Docker
+Full Stack Developer,Authentication
+Full Stack Developer,JWT
+Full Stack Developer,Responsive Design
+Full Stack Developer,Webpack
+Full Stack Developer,NPM
+Full Stack Developer,TypeScript
+Full Stack Developer,Testing
+Full Stack Developer,Debugging
+Full Stack Developer,Deployment
+Full Stack Developer,AWS
+Full Stack Developer,CI/CD
+Full Stack Developer,API Integration
+Full Stack Developer,Performance Optimization
+Full Stack Developer,Security Best Practices
+
+Frontend Developer,HTML
+Frontend Developer,CSS
+Frontend Developer,JavaScript
+Frontend Developer,React
+Frontend Developer,Angular
+Frontend Developer,Vue
+Frontend Developer,TypeScript
+Frontend Developer,Responsive Design
+Frontend Developer,UI Design
+Frontend Developer,UX Design
+Frontend Developer,Accessibility
+Frontend Developer,Webpack
+Frontend Developer,Babel
+Frontend Developer,NPM
+Frontend Developer,Performance Optimization
+Frontend Developer,Testing
+Frontend Developer,Jest
+Frontend Developer,Debugging
+Frontend Developer,API Integration
+Frontend Developer,Git
+Frontend Developer,GitHub
+Frontend Developer,CSS Grid
+Frontend Developer,Flexbox
+Frontend Developer,Animation
+Frontend Developer,SASS
+Frontend Developer,LESS
+Frontend Developer,Design Systems
+Frontend Developer,Material UI
+Frontend Developer,Bootstrap
+Frontend Developer,Tailwind CSS
+
+Backend Developer,Python
+Backend Developer,Java
+Backend Developer,Node.js
+Backend Developer,Spring Boot
+Backend Developer,Django
+Backend Developer,Flask
+Backend Developer,REST API
+Backend Developer,GraphQL
+Backend Developer,MySQL
+Backend Developer,PostgreSQL
+Backend Developer,MongoDB
+Backend Developer,Database Design
+Backend Developer,Authentication
+Backend Developer,JWT
+Backend Developer,Security
+Backend Developer,API Development
+Backend Developer,Microservices
+Backend Developer,Docker
+Backend Developer,Kubernetes
+Backend Developer,Git
+Backend Developer,Linux
+Backend Developer,CI/CD
+Backend Developer,Testing
+Backend Developer,Debugging
+Backend Developer,Performance Optimization
+Backend Developer,Caching
+Backend Developer,Redis
+Backend Developer,Message Queues
+Backend Developer,RabbitMQ
+Backend Developer,Scalability
+
+DevOps Engineer,Docker
+DevOps Engineer,Kubernetes
+DevOps Engineer,AWS
+DevOps Engineer,Azure
+DevOps Engineer,GCP
+DevOps Engineer,CI/CD
+DevOps Engineer,Jenkins
+DevOps Engineer,Git
+DevOps Engineer,Linux
+DevOps Engineer,Bash
+DevOps Engineer,Terraform
+DevOps Engineer,Infrastructure as Code
+DevOps Engineer,Monitoring
+DevOps Engineer,Prometheus
+DevOps Engineer,Grafana
+DevOps Engineer,Logging
+DevOps Engineer,ELK Stack
+DevOps Engineer,Networking
+DevOps Engineer,Cloud Architecture
+DevOps Engineer,Security
+DevOps Engineer,Automation
+DevOps Engineer,Ansible
+DevOps Engineer,Containerization
+DevOps Engineer,Scaling
+DevOps Engineer,Load Balancing
+DevOps Engineer,Performance Monitoring
+DevOps Engineer,Disaster Recovery
+DevOps Engineer,Version Control
+DevOps Engineer,Release Management
+DevOps Engineer,System Administration
+
+Cloud Engineer,AWS
+Cloud Engineer,Azure
+Cloud Engineer,GCP
+Cloud Engineer,Cloud Architecture
+Cloud Engineer,Virtualization
+Cloud Engineer,Docker
+Cloud Engineer,Kubernetes
+Cloud Engineer,Networking
+Cloud Engineer,Load Balancing
+Cloud Engineer,Auto Scaling
+Cloud Engineer,Monitoring
+Cloud Engineer,Security
+Cloud Engineer,Identity Management
+Cloud Engineer,Storage Systems
+Cloud Engineer,Databases
+Cloud Engineer,Infrastructure as Code
+Cloud Engineer,Terraform
+Cloud Engineer,CI/CD
+Cloud Engineer,Serverless
+Cloud Engineer,Lambda
+Cloud Engineer,Cloud Migration
+Cloud Engineer,Cloud Optimization
+Cloud Engineer,Cloud Security
+Cloud Engineer,Backup Systems
+Cloud Engineer,Disaster Recovery
+Cloud Engineer,Logging
+Cloud Engineer,Cost Optimization
+Cloud Engineer,Automation
+Cloud Engineer,Git
+Cloud Engineer,Linux
+
+Cybersecurity Analyst,Network Security
+Cybersecurity Analyst,Ethical Hacking
+Cybersecurity Analyst,Penetration Testing
+Cybersecurity Analyst,Firewalls
+Cybersecurity Analyst,Intrusion Detection
+Cybersecurity Analyst,SIEM
+Cybersecurity Analyst,Incident Response
+Cybersecurity Analyst,Malware Analysis
+Cybersecurity Analyst,Cryptography
+Cybersecurity Analyst,Threat Intelligence
+Cybersecurity Analyst,Risk Assessment
+Cybersecurity Analyst,Security Auditing
+Cybersecurity Analyst,Vulnerability Scanning
+Cybersecurity Analyst,Security Policies
+Cybersecurity Analyst,Compliance
+Cybersecurity Analyst,Identity Management
+Cybersecurity Analyst,Access Control
+Cybersecurity Analyst,Digital Forensics
+Cybersecurity Analyst,Security Monitoring
+Cybersecurity Analyst,Cloud Security
+Cybersecurity Analyst,Network Protocols
+Cybersecurity Analyst,Python
+Cybersecurity Analyst,Linux
+Cybersecurity Analyst,Security Automation
+Cybersecurity Analyst,Security Tools
+Cybersecurity Analyst,Threat Detection
+Cybersecurity Analyst,Security Testing
+Cybersecurity Analyst,Data Protection
+Cybersecurity Analyst,Endpoint Security
+Cybersecurity Analyst,Security Awareness
