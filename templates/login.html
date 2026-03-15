@@ -1,44 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-        <title>Login</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign In – SkillGap AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-<header class="site-header">
-    <div class="brand">
-        <div class="logo"></div>
-        <h1>SkillGap</h1>
-    </div>
-    <div>
-        <a href="/register" class="logout-btn">Register</a>
-    </div>
-</header>
+<div class="auth-container">
+  <div class="auth-card">
 
-<div class="container">
-        <div class="panel">
-            <h2>Login</h2>
-            <form method="POST">
-                    <div class="field">
-                        <label>Email</label>
-                        <input type="email" name="email" placeholder="Email" required>
-                    </div>
-          
-                    <div class="field">
-                        <label>Password</label>
-                        <input type="password" name="password" placeholder="Password" required>
-                    </div>
+    <div class="auth-logo">
+      <div class="logo-icon">⚡</div>
+      <span>SkillGap AI</span>
+    </div>
 
-                    <div class="field">
-                        <button class="btn" type="submit">Login</button>
-                    </div>
-            </form>
-            <p class="muted">No account? <a href="/register">Register</a></p>
-        </div>
-</div>
+    <h2 class="auth-title">Welcome back</h2>
+    <p class="auth-sub">Sign in to save and track your skill gap analyses</p>
+
+    {% if error %}
+    <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      <div class="form-field">
+        <label class="form-label"><i class="fa-solid fa-envelope"></i> Email</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-field">
+        <label class="form-label"><i class="fa-solid fa-lock"></i> Password</label>
+        <input type="password" name="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn-submit">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Don't have an account? <a href="/register">Create one free</a>
+    </div>
+
+  </div>
 
 </body>
 </html>

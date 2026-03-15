@@ -1,91 +1,238 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-        <title>Skill Gap Analyzer</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <style>
-                .hero{display:flex;align-items:center;justify-content:space-between;gap:18px}
-                .hero-content{flex:1}
-                .hero-cta{min-width:180px}
-        </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkillGap AI – Bridge Your Future Role</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
+<!-- Header -->
 <header class="site-header">
-    <div class="brand">
-        <div class="logo"></div>
-        <h1>SkillGap Analyzer</h1>
-    </div>
-    <div>
-        {% if session.get('user') %}
-            <a href="/logout" class="logout-btn">Logout</a>
-        {% else %}
-            <a href="/login" class="logout-btn">Login</a>
-        {% endif %}
-    </div>
+  <div class="brand">
+    <div class="logo">⚡</div>
+    <h1>SkillGap AI</h1>
+  </div>
+  <div class="header-actions">
+    {% if session.get('user') %}
+      <div class="user-badge"><i class="fa-solid fa-circle-user"></i> <strong>{{ session.get('user') }}</strong></div>
+      <a href="/logout" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    {% else %}
+      <a href="/login" class="btn" style="padding:8px 16px;font-size:13px"><i class="fa-solid fa-right-to-bracket"></i> Sign In</a>
+    {% endif %}
+  </div>
 </header>
 
 <div class="container">
-        <div class="hero panel">
-            <div class="hero-content">
-                <h2>AI Skill Gap Analyzer</h2>
-                <p class="muted">Analyze your skills and get a personalized, role-based learning roadmap.</p>
-            </div>
-            <div class="hero-cta">
-                <a href="#form" class="btn">Get Started <i class="fa-solid fa-arrow-right" style="margin-left:8px"></i></a>
-            </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge"><i class="fa-solid fa-bolt"></i> AI-Powered Career Intelligence</div>
+    <h2>Bridge Your<br>Future Role</h2>
+    <p>Enter your skills or paste your resume, choose your dream role,<br>and get an AI-powered roadmap to get there.</p>
+  </div>
+
+  <!-- Analyze Form -->
+  <form method="POST" id="analyzeForm">
+    <div class="main-card">
+
+      <!-- Name -->
+      <div class="name-field">
+        <div class="field-label"><i class="fa-solid fa-user"></i> Your Name</div>
+        <input type="text" name="name" placeholder="Enter your name" required>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Target Role -->
+      <div class="section-label"><i class="fa-solid fa-bullseye"></i> Target Role</div>
+      <div class="roles-grid">
+        <div class="role-chip" onclick="selectRole(this,'full stack developer')"><i class="fa-solid fa-layer-group"></i> Full Stack Developer</div>
+        <div class="role-chip" onclick="selectRole(this,'data scientist')"><i class="fa-solid fa-chart-line"></i> Data Scientist</div>
+        <div class="role-chip" onclick="selectRole(this,'machine learning engineer')"><i class="fa-solid fa-brain"></i> ML Engineer</div>
+        <div class="role-chip" onclick="selectRole(this,'frontend developer')"><i class="fa-solid fa-desktop"></i> Frontend Developer</div>
+        <div class="role-chip" onclick="selectRole(this,'backend developer')"><i class="fa-solid fa-server"></i> Backend Developer</div>
+        <div class="role-chip" onclick="selectRole(this,'devops engineer')"><i class="fa-solid fa-gears"></i> DevOps Engineer</div>
+        <div class="role-chip" onclick="selectRole(this,'product manager')"><i class="fa-solid fa-clipboard-list"></i> Product Manager</div>
+        <div class="role-chip" onclick="selectRole(this,'ux designer')"><i class="fa-solid fa-pen-ruler"></i> UX Designer</div>
+        <div class="role-chip" onclick="selectRole(this,'cloud architect')"><i class="fa-solid fa-cloud"></i> Cloud Architect</div>
+        <div class="role-chip" onclick="selectRole(this,'mobile developer')"><i class="fa-solid fa-mobile-screen"></i> Mobile Developer</div>
+      </div>
+      <input type="hidden" name="role" id="roleInput">
+
+      <hr class="divider">
+
+      <!-- Skills Input Tabs -->
+      <div class="section-label"><i class="fa-solid fa-wand-magic-sparkles"></i> Your Skills</div>
+      <div class="input-tabs">
+        <button type="button" class="tab-btn active" onclick="switchTab(this,'tab-skills')"><i class="fa-solid fa-plus"></i> Add Skills</button>
+        <button type="button" class="tab-btn" onclick="switchTab(this,'tab-resume')"><i class="fa-solid fa-file-arrow-up"></i> Upload Resume</button>
+        <button type="button" class="tab-btn" onclick="switchTab(this,'tab-paste')"><i class="fa-regular fa-clipboard"></i> Paste Text</button>
+        <button type="button" class="tab-btn" onclick="switchTab(this,'tab-linkedin')"><i class="fa-brands fa-linkedin"></i> LinkedIn</button>
+      </div>
+
+      <!-- Tab: Add Skills -->
+      <div id="tab-skills" class="tab-panel active">
+        <textarea class="skills-input" name="skills" id="skillsText"
+          placeholder="e.g. Python, SQL, React, Machine Learning, Docker..."></textarea>
+      </div>
+
+      <!-- Tab: Upload Resume -->
+      <div id="tab-resume" class="tab-panel">
+        <div class="drop-zone">
+          <input type="file" accept=".txt,.pdf" id="resumeFile" onchange="handleFile(event)">
+          <div class="drop-zone-icon">📄</div>
+          <div class="drop-zone-text">Drop your resume here or <span>browse</span></div>
+          <div class="drop-zone-text" style="margin-top:6px;font-size:12px">Supports .txt files · Skills auto-extracted</div>
         </div>
+        <div id="fileStatus" style="color:#a78bfa;font-size:13px;margin-top:10px;display:none"></div>
+      </div>
 
-        <div class="grid">
-            <div>
-                <div id="form" class="panel">
-                    <form method="POST">
-                        <div class="field">
-                            <label>Name</label>
-                            <input type="text" name="name" required>
-                        </div>
+      <!-- Tab: Paste Text -->
+      <div id="tab-paste" class="tab-panel">
+        <textarea class="skills-input" id="pasteText"
+          placeholder="Paste your resume or any text here — we'll auto-extract your skills..."
+          style="min-height:140px" oninput="extractFromText()"></textarea>
+        <p style="color:var(--muted2);font-size:12px;margin-top:8px">
+          <i class="fa-solid fa-sparkles" style="color:#a78bfa"></i>
+          Skills are automatically detected as you type
+        </p>
+      </div>
 
-                        <div class="field">
-                            <label>Select Target Role</label>
-                            <select name="role" required>
-                                    <option value="">-- Select a role --</option>
-                                    <option value="Data Scientist">Data Scientist</option>
-                                    <option value="Full Stack Developer">Full Stack Developer</option>
-                                    <option value="Machine Learning Engineer">Machine Learning Engineer</option>
-                            </select>
-                        </div>
-
-                        <div class="field">
-                            <label>Your Skills (comma separated)</label>
-                            <textarea name="skills" placeholder="Python, SQL, HTML" required></textarea>
-                        </div>
-
-                        <div class="field">
-                            <button class="btn" type="submit">Analyze Skills</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <aside>
-                <div class="panel card">
-                    <h3>Why use SkillGap?</h3>
-                    <p class="muted">Get a clear view of what you know and what to learn next, with actionable mini-project suggestions.</p>
-                </div>
-                <div class="panel card">
-                    <h3>Quick Tips</h3>
-                    <ul class="muted">
-                        <li>Use commas to separate skills</li>
-                        <li>Pick one role to focus the roadmap</li>
-                        <li>Try building the suggested mini-projects</li>
-                    </ul>
-                </div>
-            </aside>
+      <!-- Tab: LinkedIn -->
+      <div id="tab-linkedin" class="tab-panel">
+        <div style="background:rgba(10,102,194,.08);border:1px solid rgba(10,102,194,.2);border-radius:12px;padding:28px;text-align:center">
+          <i class="fa-brands fa-linkedin" style="font-size:34px;color:#0a66c2;margin-bottom:12px;display:block"></i>
+          <p style="color:var(--muted);font-size:14px;margin-bottom:14px">Paste your LinkedIn profile URL and we'll extract your skills</p>
+          <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/yourprofile" style="text-align:center;margin-bottom:12px">
+          <button type="button" onclick="fetchLinkedIn()" class="btn" style="width:100%">
+            <i class="fa-brands fa-linkedin"></i> Extract from LinkedIn
+          </button>
         </div>
-  
+      </div>
+
+      <!-- Trending Skills Result -->
+      <div class="trending-panel" id="trendingPanel">
+        <h4><i class="fa-solid fa-arrow-trend-up"></i> Trending Skills for <span id="trendingRole"></span></h4>
+        <div class="trending-tags" id="trendingTags"></div>
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="actions">
+        <button type="submit" class="btn-primary">
+          <i class="fa-solid fa-magnifying-glass-chart"></i> Analyze Skill Gap
+        </button>
+        <button type="button" class="btn-secondary" onclick="getTrending()">
+          <i class="fa-solid fa-arrow-trend-up"></i> Get Trending Skills
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Sign-in note -->
+  <div class="signin-note">
+    {% if not session.get('user') %}
+      <i class="fa-solid fa-lock" style="color:#a78bfa"></i>
+      <a href="/login">Sign in</a> to save analyses and track your progress over time.
+    {% else %}
+      <i class="fa-solid fa-circle-check" style="color:#10b981"></i>
+      Signed in as <strong>{{ session.get('user') }}</strong> — your analyses are being tracked.
+    {% endif %}
+  </div>
+
 </div>
 
+<script>
+const SKILL_KEYWORDS = [
+  'python','javascript','typescript','java','c++','c#','go','rust','swift','kotlin','php','ruby','scala','r',
+  'html','css','react','angular','vue','next.js','node.js','nodejs','flask','django','spring','express','fastapi',
+  'sql','mysql','postgresql','mongodb','redis','firebase','sqlite','cassandra',
+  'aws','azure','gcp','docker','kubernetes','terraform','ansible','linux','git',
+  'machine learning','deep learning','tensorflow','pytorch','pandas','numpy','scikit-learn','nlp',
+  'figma','sketch','adobe xd','photoshop','illustrator','prototyping','wireframing',
+  'agile','scrum','jira','product management','roadmapping','user research',
+  'rest api','graphql','microservices','ci/cd','devops','mlops',
+  'flutter','react native','android','ios','mobile ui','firebase'
+];
+
+let selectedRole = '';
+
+function selectRole(el, role) {
+  document.querySelectorAll('.role-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedRole = role;
+  document.getElementById('roleInput').value = role;
+  document.getElementById('trendingPanel').classList.remove('show');
+}
+
+function switchTab(btn, tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function extractFromText() {
+  const text = document.getElementById('pasteText').value.toLowerCase();
+  const found = SKILL_KEYWORDS.filter(s => text.includes(s));
+  if (found.length > 0) document.getElementById('skillsText').value = found.join(', ');
+}
+
+function handleFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = document.getElementById('fileStatus');
+  status.style.display = 'block';
+  if (file.name.endsWith('.txt')) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const text = e.target.result.toLowerCase();
+      const found = SKILL_KEYWORDS.filter(s => text.includes(s));
+      document.getElementById('skillsText').value = found.length > 0 ? found.join(', ') : '';
+      status.innerHTML = `<i class="fa-solid fa-check" style="color:#10b981"></i> Extracted <strong>${found.length} skills</strong> from ${file.name}`;
+    };
+    reader.readAsText(file);
+  } else {
+    status.innerHTML = `<i class="fa-solid fa-file-circle-check" style="color:#a78bfa"></i> <strong>${file.name}</strong> uploaded — add your key skills in the "Add Skills" tab.`;
+  }
+}
+
+function getTrending() {
+  if (!selectedRole) { alert('Please select a target role first!'); return; }
+  fetch('/api/trending', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({role: selectedRole})
+  })
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('trendingRole').textContent =
+      selectedRole.replace(/\b\w/g, l => l.toUpperCase());
+    document.getElementById('trendingTags').innerHTML =
+      data.trending_skills.map(s =>
+        `<span class="trending-tag"><i class="fa-solid fa-fire"></i> ${s}</span>`
+      ).join('');
+    document.getElementById('trendingPanel').classList.add('show');
+  });
+}
+
+function fetchLinkedIn() {
+  alert('LinkedIn integration coming soon! Please add your skills manually.');
+}
+
+document.getElementById('analyzeForm').addEventListener('submit', function(e) {
+  if (!selectedRole) {
+    e.preventDefault();
+    alert('Please select a target role first!');
+    return;
+  }
+  if (!document.getElementById('skillsText').value.trim()) {
+    e.preventDefault();
+    alert('Please enter at least one skill!');
+  }
+});
+</script>
 </body>
 </html>
