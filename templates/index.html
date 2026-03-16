@@ -9,6 +9,28 @@
 </head>
 <body>
 
+  
+<div class="container">
+  <h1>AI Resume Analyzer</h1>
+
+  <p>Paste your resume below to check ATS score and skill gap</p>
+
+  <form action="/analyze" method="POST">
+
+    <textarea 
+    name="resume_text"
+    placeholder="Paste your resume text here..."
+    required>
+    </textarea>
+
+    <br>
+
+    <button type="submit">Analyze Resume</button>
+
+  </form>
+
+</div>
+
 <!-- Header -->
 <header class="site-header">
   <div class="brand">

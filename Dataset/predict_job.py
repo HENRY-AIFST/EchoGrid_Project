@@ -14,3 +14,4 @@ X = mlb.transform(user_skills)
 prediction = model.predict(X)
 
 print("Predicted Job Role:", prediction[0])
+

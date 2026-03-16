@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from resume_analyzer import analyze_resume
 import sqlite3
 
 app = Flask(__name__)
@@ -200,6 +201,32 @@ def login():
 def logout():
     session.pop('user', None)
     return redirect(url_for('login'))
+
+
+# ADD THIS PART HERE
+@app.route('/analyze', methods=['POST'])
+def analyze():
+
+    resume_text = request.form['resume_text']
+
+    job_skills = [
+        "python",
+        "sql",
+        "machine learning",
+        "deep learning",
+        "nlp",
+        "flask"
+    ]
+
+    result = analyze_resume(resume_text, job_skills)
+
+    return render_template(
+        "dashboard.html",
+        ats_score=result["ats_score"],
+        skills=result["user_skills"],
+        gap=result["skill_gap"],
+        roadmap=result["learning_path"]
+    )
 
 
 if __name__ == '__main__':
