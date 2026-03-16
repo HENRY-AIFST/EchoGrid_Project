@@ -95,6 +95,16 @@ def normalize_skills(skills):
     return [s.strip().lower() for s in skills.split(',') if s.strip()]
 
 
+def extract_text_from_upload(upload):
+    if not upload or not upload.filename:
+        return ""
+    try:
+        raw = upload.read()
+        return raw.decode("utf-8", errors="ignore").strip()
+    except Exception:
+        return ""
+
+
 def find_skill_gap(user_skills, role):
     required = JOB_ROLES.get(role.lower(), [])
     return [s for s in required if s not in user_skills]
@@ -122,12 +132,23 @@ def index():
         name        = request.form.get('name', 'User')
         role        = request.form.get('role', '').lower()
         skills_input = request.form.get('skills', '')
+        resume_text = request.form.get('resume_text', '')
+        upload = request.files.get('resume_file')
 
-        user_skills    = normalize_skills(skills_input)
+        uploaded_text = extract_text_from_upload(upload)
+        combined_resume_text = "\n".join([t for t in [resume_text, uploaded_text] if t]).strip()
+
+        required_skills = JOB_ROLES.get(role, [])
+
+        user_skill_set = set(normalize_skills(skills_input))
+        if combined_resume_text and required_skills:
+            resume_result = analyze_resume(combined_resume_text, required_skills)
+            user_skill_set.update(resume_result.get("user_skills", []))
+
+        user_skills    = sorted(user_skill_set)
         missing_skills = find_skill_gap(user_skills, role)
         roadmap        = generate_roadmap(missing_skills, role)
 
-        required_skills = JOB_ROLES.get(role, [])
         matched_count   = len(required_skills) - len(missing_skills)
         match_pct       = round((matched_count / len(required_skills)) * 100) if required_skills else 0
 
