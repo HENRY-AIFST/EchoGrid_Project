@@ -1,9 +1,27 @@
+import os
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from authlib.integrations.flask_client import OAuth
+from dotenv import load_dotenv
 from resume_analyzer import analyze_resume
 import sqlite3
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "skillgap_secret"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "skillgap_secret")
+app.config["GOOGLE_CLIENT_ID"] = os.getenv("GOOGLE_CLIENT_ID")
+app.config["GOOGLE_CLIENT_SECRET"] = os.getenv("GOOGLE_CLIENT_SECRET")
+
+oauth = OAuth(app)
+google = None
+if app.config["GOOGLE_CLIENT_ID"] and app.config["GOOGLE_CLIENT_SECRET"]:
+    google = oauth.register(
+        name="google",
+        client_id=app.config["GOOGLE_CLIENT_ID"],
+        client_secret=app.config["GOOGLE_CLIENT_SECRET"],
+        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+        client_kwargs={"scope": "openid email profile"},
+    )
 
 # ── Job Roles & Required Skills ──────────────────────────────────────────────
 JOB_ROLES = {
@@ -215,7 +233,57 @@ def login():
             return redirect(url_for('index'))
         else:
             error = "Invalid email or password. Please try again."
+    if request.args.get("error"):
+        error = request.args.get("error")
     return render_template('login.html', error=error)
+
+
+@app.route('/google/login')
+def google_login():
+    if not google:
+        return redirect(url_for('login', error='Google Sign-In is not configured yet.'))
+
+    redirect_uri = url_for('google_callback', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+
+@app.route('/google/callback')
+def google_callback():
+    if not google:
+        return redirect(url_for('login', error='Google Sign-In is not configured yet.'))
+
+    try:
+        token = google.authorize_access_token()
+    except Exception:
+        return redirect(url_for('login', error='Google authentication failed. Please try again.'))
+
+    user_info = token.get('userinfo')
+    if not user_info:
+        profile_resp = google.get('userinfo')
+        if profile_resp.status_code == 200:
+            user_info = profile_resp.json()
+
+    if not user_info:
+        return redirect(url_for('login', error='Could not fetch Google profile information.'))
+
+    email = user_info.get('email')
+    name = user_info.get('name') or email
+    if not email:
+        return redirect(url_for('login', error='Google account email is not available.'))
+
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM auth_users WHERE email = ?', (email,)).fetchone()
+    if not user:
+        conn.execute(
+            'INSERT INTO auth_users (name, email, password) VALUES (?, ?, ?)',
+            (name, email, ''),
+        )
+        conn.commit()
+    conn.close()
+
+    session['user'] = name
+    session['user_email'] = email
+    return redirect(url_for('index'))
 
 
 @app.route('/logout')

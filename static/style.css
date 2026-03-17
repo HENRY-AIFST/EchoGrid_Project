@@ -355,6 +355,37 @@ input::placeholder { color: var(--muted2); }
   transition: var(--t); margin-top: 6px;
 }
 .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(124,58,237,.38); }
+.oauth-divider {
+  display: flex; align-items: center; justify-content: center;
+  margin: 18px 0 14px; color: var(--muted2); font-size: 12px;
+}
+.oauth-divider::before,
+.oauth-divider::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--card-border);
+}
+.oauth-divider span {
+  padding: 0 10px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  font-weight: 600;
+}
+.google-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: #fff; color: #444;
+  border: 1px solid #ddd;
+  padding: 11px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.google-btn:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,.2);
+  transform: translateY(-1px);
+}
 .auth-footer { text-align: center; margin-top: 22px; color: var(--muted); font-size: 14px; }
 .auth-footer a { color: #a78bfa; text-decoration: none; font-weight: 600; }
 .auth-footer a:hover { text-decoration: underline; }
