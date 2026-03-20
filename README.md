@@ -1,4 +1,4 @@
-# 🚀 AI-Powered Skill Gap Visualizer & Learning Path Generator
+🚀 AI-Powered Skill Gap Visualizer & Learning Path Generator
 
 An AI-powered web application that analyzes user skills, compares them with industry requirements, calculates ATS score, identifies skill gaps, and generates a personalized learning roadmap.
 
