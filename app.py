@@ -7,6 +7,18 @@ import sqlite3
 
 load_dotenv()
 
+
+def _has_real_google_credential(value):
+    if not value:
+        return False
+    cleaned = value.strip()
+    placeholders = {
+        "your_google_client_id_here",
+        "your_google_client_secret_here",
+        "change_me",
+    }
+    return cleaned not in placeholders
+
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "skillgap_secret")
 app.config["GOOGLE_CLIENT_ID"] = os.getenv("GOOGLE_CLIENT_ID")
@@ -14,7 +26,7 @@ app.config["GOOGLE_CLIENT_SECRET"] = os.getenv("GOOGLE_CLIENT_SECRET")
 
 oauth = OAuth(app)
 google = None
-if app.config["GOOGLE_CLIENT_ID"] and app.config["GOOGLE_CLIENT_SECRET"]:
+if _has_real_google_credential(app.config["GOOGLE_CLIENT_ID"]) and _has_real_google_credential(app.config["GOOGLE_CLIENT_SECRET"]):
     google = oauth.register(
         name="google",
         client_id=app.config["GOOGLE_CLIENT_ID"],
@@ -241,16 +253,17 @@ def login():
 @app.route('/google/login')
 def google_login():
     if not google:
-        return redirect(url_for('login', error='Google Sign-In is not configured yet.'))
+        return redirect(url_for('login', error='Google Sign-In is not configured. Add valid GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env and restart the app.'))
 
     redirect_uri = url_for('google_callback', _external=True)
-    return google.authorize_redirect(redirect_uri)
+    # Force Google to show account chooser, including "Use another account".
+    return google.authorize_redirect(redirect_uri, prompt='select_account')
 
 
 @app.route('/google/callback')
 def google_callback():
     if not google:
-        return redirect(url_for('login', error='Google Sign-In is not configured yet.'))
+        return redirect(url_for('login', error='Google Sign-In is not configured. Add valid GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env and restart the app.'))
 
     try:
         token = google.authorize_access_token()
@@ -284,6 +297,24 @@ def google_callback():
     session['user'] = name
     session['user_email'] = email
     return redirect(url_for('index'))
+
+
+@app.route('/health/oauth')
+def health_oauth():
+    client_id = app.config.get("GOOGLE_CLIENT_ID")
+    client_secret = app.config.get("GOOGLE_CLIENT_SECRET")
+    callback_urls = [
+        url_for("google_callback", _external=True),
+        "http://localhost:5000/google/callback",
+    ]
+    return jsonify({
+        "google_oauth_registered": bool(google),
+        "client_id_configured": _has_real_google_credential(client_id),
+        "client_secret_configured": _has_real_google_credential(client_secret),
+        "configured_client_id_hint": (client_id[:16] + "...") if _has_real_google_credential(client_id) else None,
+        "expected_redirect_uris": callback_urls,
+        "status": "ok" if bool(google) else "not_configured",
+    })
 
 
 @app.route('/logout')
