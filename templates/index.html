@@ -9,28 +9,6 @@
 </head>
 <body>
 
-  
-<div class="container">
-  <h1>AI Resume Analyzer</h1>
-
-  <p>Paste your resume below to check ATS score and skill gap</p>
-
-  <form action="/analyze" method="POST">
-
-    <textarea 
-    name="resume_text"
-    placeholder="Paste your resume text here..."
-    required>
-    </textarea>
-
-    <br>
-
-    <button type="submit">Analyze Resume</button>
-
-  </form>
-
-</div>
-
 <!-- Header -->
 <header class="site-header">
   <div class="brand">
@@ -57,7 +35,7 @@
   </div>
 
   <!-- Analyze Form -->
-  <form method="POST" id="analyzeForm">
+  <form method="POST" id="analyzeForm" enctype="multipart/form-data">
     <div class="main-card">
 
       <!-- Name -->
@@ -104,7 +82,7 @@
       <!-- Tab: Upload Resume -->
       <div id="tab-resume" class="tab-panel">
         <div class="drop-zone">
-          <input type="file" accept=".txt,.pdf" id="resumeFile" onchange="handleFile(event)">
+          <input type="file" accept=".txt,.pdf" id="resumeFile" name="resume_file" onchange="handleFile(event)">
           <div class="drop-zone-icon">📄</div>
           <div class="drop-zone-text">Drop your resume here or <span>browse</span></div>
           <div class="drop-zone-text" style="margin-top:6px;font-size:12px">Supports .txt files · Skills auto-extracted</div>
@@ -114,7 +92,7 @@
 
       <!-- Tab: Paste Text -->
       <div id="tab-paste" class="tab-panel">
-        <textarea class="skills-input" id="pasteText"
+        <textarea class="skills-input" id="pasteText" name="resume_text"
           placeholder="Paste your resume or any text here — we'll auto-extract your skills..."
           style="min-height:140px" oninput="extractFromText()"></textarea>
         <p style="color:var(--muted2);font-size:12px;margin-top:8px">
@@ -206,6 +184,9 @@ function handleFile(event) {
   const file = event.target.files[0];
   if (!file) return;
   const status = document.getElementById('fileStatus');
+  const form = document.getElementById('analyzeForm');
+  const hasName = !!form.querySelector('input[name="name"]').value.trim();
+  const shouldAutoAnalyze = hasName && !!selectedRole;
   status.style.display = 'block';
   if (file.name.endsWith('.txt')) {
     const reader = new FileReader();
@@ -214,10 +195,18 @@ function handleFile(event) {
       const found = SKILL_KEYWORDS.filter(s => text.includes(s));
       document.getElementById('skillsText').value = found.length > 0 ? found.join(', ') : '';
       status.innerHTML = `<i class="fa-solid fa-check" style="color:#10b981"></i> Extracted <strong>${found.length} skills</strong> from ${file.name}`;
+      if (shouldAutoAnalyze) {
+        status.innerHTML += ' · Running analysis...';
+        form.submit();
+      }
     };
     reader.readAsText(file);
   } else {
     status.innerHTML = `<i class="fa-solid fa-file-circle-check" style="color:#a78bfa"></i> <strong>${file.name}</strong> uploaded — add your key skills in the "Add Skills" tab.`;
+    if (shouldAutoAnalyze) {
+      status.innerHTML += ' · Running analysis...';
+      form.submit();
+    }
   }
 }
 
@@ -250,9 +239,12 @@ document.getElementById('analyzeForm').addEventListener('submit', function(e) {
     alert('Please select a target role first!');
     return;
   }
-  if (!document.getElementById('skillsText').value.trim()) {
+  const hasSkills = !!document.getElementById('skillsText').value.trim();
+  const hasPastedResume = !!document.getElementById('pasteText').value.trim();
+  const hasResumeFile = !!document.getElementById('resumeFile').files.length;
+  if (!hasSkills && !hasPastedResume && !hasResumeFile) {
     e.preventDefault();
-    alert('Please enter at least one skill!');
+    alert('Please add skills, paste resume text, or upload a resume file!');
   }
 });
 </script>

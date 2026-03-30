@@ -1,9 +1,39 @@
+import os
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from authlib.integrations.flask_client import OAuth
+from dotenv import load_dotenv
 from resume_analyzer import analyze_resume
 import sqlite3
 
+load_dotenv()
+
+
+def _has_real_google_credential(value):
+    if not value:
+        return False
+    cleaned = value.strip()
+    placeholders = {
+        "your_google_client_id_here",
+        "your_google_client_secret_here",
+        "change_me",
+    }
+    return cleaned not in placeholders
+
 app = Flask(__name__)
-app.secret_key = "skillgap_secret"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "skillgap_secret")
+app.config["GOOGLE_CLIENT_ID"] = os.getenv("GOOGLE_CLIENT_ID")
+app.config["GOOGLE_CLIENT_SECRET"] = os.getenv("GOOGLE_CLIENT_SECRET")
+
+oauth = OAuth(app)
+google = None
+if _has_real_google_credential(app.config["GOOGLE_CLIENT_ID"]) and _has_real_google_credential(app.config["GOOGLE_CLIENT_SECRET"]):
+    google = oauth.register(
+        name="google",
+        client_id=app.config["GOOGLE_CLIENT_ID"],
+        client_secret=app.config["GOOGLE_CLIENT_SECRET"],
+        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+        client_kwargs={"scope": "openid email profile"},
+    )
 
 # ── Job Roles & Required Skills ──────────────────────────────────────────────
 JOB_ROLES = {
@@ -95,6 +125,16 @@ def normalize_skills(skills):
     return [s.strip().lower() for s in skills.split(',') if s.strip()]
 
 
+def extract_text_from_upload(upload):
+    if not upload or not upload.filename:
+        return ""
+    try:
+        raw = upload.read()
+        return raw.decode("utf-8", errors="ignore").strip()
+    except Exception:
+        return ""
+
+
 def find_skill_gap(user_skills, role):
     required = JOB_ROLES.get(role.lower(), [])
     return [s for s in required if s not in user_skills]
@@ -122,12 +162,23 @@ def index():
         name        = request.form.get('name', 'User')
         role        = request.form.get('role', '').lower()
         skills_input = request.form.get('skills', '')
+        resume_text = request.form.get('resume_text', '')
+        upload = request.files.get('resume_file')
 
-        user_skills    = normalize_skills(skills_input)
+        uploaded_text = extract_text_from_upload(upload)
+        combined_resume_text = "\n".join([t for t in [resume_text, uploaded_text] if t]).strip()
+
+        required_skills = JOB_ROLES.get(role, [])
+
+        user_skill_set = set(normalize_skills(skills_input))
+        if combined_resume_text and required_skills:
+            resume_result = analyze_resume(combined_resume_text, required_skills)
+            user_skill_set.update(resume_result.get("user_skills", []))
+
+        user_skills    = sorted(user_skill_set)
         missing_skills = find_skill_gap(user_skills, role)
         roadmap        = generate_roadmap(missing_skills, role)
 
-        required_skills = JOB_ROLES.get(role, [])
         matched_count   = len(required_skills) - len(missing_skills)
         match_pct       = round((matched_count / len(required_skills)) * 100) if required_skills else 0
 
@@ -195,7 +246,76 @@ def login():
             return redirect(url_for('index'))
         else:
             error = "Invalid email or password. Please try again."
+    if request.args.get("error"):
+        error = request.args.get("error")
     return render_template('login.html', error=error)
+
+
+@app.route('/google/login')
+def google_login():
+    if not google:
+        return redirect(url_for('login', error='Google Sign-In is not configured. Add valid GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env and restart the app.'))
+
+    redirect_uri = url_for('google_callback', _external=True)
+    # Force Google to show account chooser, including "Use another account".
+    return google.authorize_redirect(redirect_uri, prompt='select_account')
+
+
+@app.route('/google/callback')
+def google_callback():
+    if not google:
+        return redirect(url_for('login', error='Google Sign-In is not configured. Add valid GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env and restart the app.'))
+
+    try:
+        token = google.authorize_access_token()
+    except Exception:
+        return redirect(url_for('login', error='Google authentication failed. Please try again.'))
+
+    user_info = token.get('userinfo')
+    if not user_info:
+        profile_resp = google.get('userinfo')
+        if profile_resp.status_code == 200:
+            user_info = profile_resp.json()
+
+    if not user_info:
+        return redirect(url_for('login', error='Could not fetch Google profile information.'))
+
+    email = user_info.get('email')
+    name = user_info.get('name') or email
+    if not email:
+        return redirect(url_for('login', error='Google account email is not available.'))
+
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM auth_users WHERE email = ?', (email,)).fetchone()
+    if not user:
+        conn.execute(
+            'INSERT INTO auth_users (name, email, password) VALUES (?, ?, ?)',
+            (name, email, ''),
+        )
+        conn.commit()
+    conn.close()
+
+    session['user'] = name
+    session['user_email'] = email
+    return redirect(url_for('index'))
+
+
+@app.route('/health/oauth')
+def health_oauth():
+    client_id = app.config.get("GOOGLE_CLIENT_ID")
+    client_secret = app.config.get("GOOGLE_CLIENT_SECRET")
+    callback_urls = [
+        url_for("google_callback", _external=True),
+        "http://localhost:5000/google/callback",
+    ]
+    return jsonify({
+        "google_oauth_registered": bool(google),
+        "client_id_configured": _has_real_google_credential(client_id),
+        "client_secret_configured": _has_real_google_credential(client_secret),
+        "configured_client_id_hint": (client_id[:16] + "...") if _has_real_google_credential(client_id) else None,
+        "expected_redirect_uris": callback_urls,
+        "status": "ok" if bool(google) else "not_configured",
+    })
 
 
 @app.route('/logout')
