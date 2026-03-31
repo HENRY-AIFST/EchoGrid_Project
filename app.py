@@ -25,6 +25,7 @@ app.config["GOOGLE_CLIENT_ID"] = os.getenv("GOOGLE_CLIENT_ID")
 app.config["GOOGLE_CLIENT_SECRET"] = os.getenv("GOOGLE_CLIENT_SECRET")
 
 
+
 oauth = OAuth(app)
 google = None
 if _has_real_google_credential(app.config["GOOGLE_CLIENT_ID"]) and _has_real_google_credential(app.config["GOOGLE_CLIENT_SECRET"]):
