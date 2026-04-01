@@ -7,6 +7,7 @@ import sqlite3
 
 load_dotenv()
 
+
 def _has_real_google_credential(value):
     if not value:
         return False
