@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- TODO: Set the document title to the name of your application -->
+    <title>Lovable App</title>
+    <meta name="description" content="Career path finder helping to  improve  in skills  and  providing the new  skill  that currently on peak">
+    <meta name="author" content="Lovable" />
+
+    <!-- TODO: Update og:title to match your application name -->
+    
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/iEXwx670HYN8qSHgaBKCB1jgp213/social-images/social-1773414212923-1.webp">
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/iEXwx670HYN8qSHgaBKCB1jgp213/social-images/social-1773414212923-1.webp">
+    <meta property="og:title" content="Lovable App">
+  <meta name="twitter:title" content="Lovable App">
+  <meta property="og:description" content="Career path finder helping to  improve  in skills  and  providing the new  skill  that currently on peak">
+  <meta name="twitter:description" content="Career path finder helping to  improve  in skills  and  providing the new  skill  that currently on peak">
+</head>
+
+  <body>
+    <script>
+      // Apply theme before React renders to prevent flash
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'light') {
+          document.documentElement.classList.add('light');
+        } else {
+          document.documentElement.classList.remove('light');
+        }
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
